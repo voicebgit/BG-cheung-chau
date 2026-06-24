@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>平行心間 2.0：長洲尋寶記</title>
+<style>
+:root{--p:#0f3460;--s:#e94560;--bg:#1a1a2e;--g:#16213e;--t:#fff}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{background:var(--bg);color:var(--t);line-height:1.5;-webkit-tap-highlight-color:transparent}
+header{background:var(--p);padding:15px;text-align:center;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+h1{font-size:1.2rem;margin-bottom:8px}
+.bar{display:flex;justify-content:space-around;background:var(--g);padding:8px;border-radius:8px;font-size:.9rem}
+.bar div{text-align:center}
+.bar b{color:var(--s);font-size:1.1rem}
+.topActions{margin-top:10px;display:flex;gap:8px}
+.topActions .btn{padding:9px 12px;font-size:.9rem}
+.sec{padding:15px}
+h2{font-size:1.1rem;margin-bottom:12px;border-left:4px solid var(--s);padding-left:8px}
+.setup{background:var(--g);padding:20px;border-radius:12px;margin:20px 15px;text-align:center}
+input[type=text]{width:100%;padding:12px;border:none;border-radius:6px;margin:10px 0;font-size:1rem;background:#fff;color:#333}
+.btn{background:var(--s);color:#fff;border:none;padding:12px 20px;border-radius:6px;font-size:1rem;font-weight:bold;width:100%;cursor:pointer}
+.btn.sm{padding:10px 12px;font-size:.9rem}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sc{background:var(--g);border:2px solid transparent;border-radius:10px;padding:12px;position:relative}
+.sc.sel{border-color:var(--s);background:#1a2035}
+.sc.done{opacity:.6;border-color:#4CAF50}
+.sn{font-weight:bold;font-size:1.05rem;margin-bottom:4px}
+.sp{color:var(--s);font-weight:bold}
+.sd{font-size:.8rem;color:#aaa}
+.tag{position:absolute;top:-8px;right:-8px;padding:2px 6px;border-radius:4px;font-size:.7rem;font-weight:bold}
+.tsel{background:var(--s);color:#fff}
+.tdone{background:#4CAF50;color:#fff}
+.ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:20;display:none;justify-content:center;align-items:center}
+.ov.on{display:flex}
+.modal{background:var(--g);width:90%;max-width:400px;border-radius:12px;padding:20px;position:relative;max-height:90vh;overflow-y:auto}
+.cbtn{position:absolute;top:10px;right:10px;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
+.cbox{background:#1a1a2e;padding:12px;border-radius:8px;margin-bottom:12px;font-size:.9rem}
+.pwin{text-align:center;letter-spacing:2px;font-weight:bold}
+.msg{padding:10px;border-radius:6px;text-align:center;margin-bottom:12px;font-weight:bold;display:none}
+.ms{background:rgba(76,175,80,.2);color:#4CAF50;display:block}
+.me{background:rgba(244,67,54,.2);color:#F44336;display:block}
+.qq{background:#1a1a2e;padding:15px;border-radius:8px;margin-bottom:15px}
+.qq p{font-size:1.05rem;margin-bottom:15px}
+.qo{display:block;width:100%;background:var(--p);color:#fff;border:none;padding:12px;margin-bottom:8px;border-radius:6px;font-size:1rem;text-align:left}
+.rbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.rnum{font-size:1.5rem;font-weight:bold;color:#4CAF50}
+.bg{background:#4CAF50}.bp{background:#9C27B0}.bo{background:#FF9800}.bgy{background:#607D8B}
+.esec{background:#1a2035;border-radius:8px;padding:12px;margin-top:10px;font-size:.9rem;border-left:3px solid #FF9800}
+.tin{width:80px;text-align:center;padding:8px;margin:5px 0}
+.rbox{background:var(--g);padding:15px;border-radius:8px;font-size:.9rem}
+.rowbtn{display:flex;gap:8px;margin-top:10px}
+.rowbtn .btn{width:100%}
+@media (max-width:480px){
+  .sgrid{grid-template-columns:1fr}
+  .bar{font-size:.82rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>平行心間 2.0：長洲尋寶記</h1>
+  <div class="bar">
+    <div>主線：<b id="ms">0</b> 分</div>
+    <div>總分：<b id="ts">0</b> 分</div>
+    <div>隊伍：<b id="td"></b></div>
+  </div>
+  <div class="topActions">
+    <button class="btn bgy" onclick="showResetConfirm()">重設遊戲</button>
+  </div>
+</header>
+
+<div id="setup" class="setup">
+  <h2>歡迎來到長洲尋寶記</h2>
+  <p style="margin-bottom:15px;color:#ccc;font-size:0.95rem">請輸入您的隊伍名稱以開始遊戲</p>
+  <input type="text" id="tn" placeholder="隊伍名稱" maxlength="15">
+  <button class="btn" onclick="setTeam()">開始遊戲</button>
+</div>
+
+<div id="main" style="display:none">
+  <div class="sec rbox" style="margin:15px">
+    <h2>📋 遊戲規則</h2>
+    <ol style="margin-left:20px;color:#ccc;font-size:0.9rem">
+      <li><b>出發：</b>由長洲碼頭出發，自由選擇主站前往。</li>
+      <li><b>打卡：</b>到站後全員完成指定打卡動作並上傳 Setlog。</li>
+      <li><b>密碼：</b>向工作員展示「成功打卡」頁面。</li>
+      <li><b>解鎖：</b>輸入密碼後才正式顯示該站任務內容及計分。</li>
+      <li><b>限制：</b>每站只限 3 組完成正式任務（由場外記錄）。</li>
+      <li><b>換站：</b>每組只有 3 次換主站的機會。</li>
+      <li><b>終點：</b>所有隊伍終點站均需為 <b>長洲西園</b>。</li>
+    </ol>
+  </div>
+
+  <div class="sec">
+    <h2>🏠 主站選擇</h2>
+    <div class="sgrid" id="sgrid"></div>
+  </div>
+
+  <div class="sec rbox" style="margin:15px;border-left:4px solid #FF9800">
+    <h2>🥚 路上彩蛋</h2>
+    <p style="font-size:0.9rem;color:#ccc;margin-bottom:12px;">在前往主站途中，見到指定物件，隊員＋相應物件拍一段 Setlog。<br><br>每個有效彩蛋：<b style="color:#FF9800">+2 分</b><br><small>（最後由工作員統一計算並加入總分）</small></p>
+
+    <div style="margin-top:15px;">
+      <div style="background:#1a1a2e;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <p style="font-weight:bold;margin-bottom:10px;color:#FF9800;">🏃 碼頭 → 長洲體育館 沿途彩蛋</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <img src="碼頭-長洲體育館1.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-長洲體育館2.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-長洲體育館3.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-長洲體育館4.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <div style="background:#1a1a2e;border-radius:8px;padding:12px;">
+        <p style="font-weight:bold;margin-bottom:10px;color:#FF9800;">🏴‍☠️ 碼頭 → 張保仔洞 沿途彩蛋</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <img src="碼頭-張保仔洞1.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-張保仔洞2.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-張保仔洞3.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-張保仔洞4.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+          <img src="碼頭-張保仔洞5.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ov" class="ov">
+  <div id="mc"></div>
+</div>
+
+<script>
+var ST=[
+  {id:'cinema',name:'長洲戲院',pts:6,icon:'🎬',diff:'中',type:'quiz',bank:'cinema',pw:'CIN8',img:'4.jpeg',
+   checkin:'全員用雙手比出「相框」動作，對準戲院正面拍攝，並上傳至 Setlog。',
+   task:'問答挑戰：從 15 題題庫隨機抽出 10 題，需答對 7 題或以上方可通關。'},
+  {id:'stadium',name:'長洲體育館',pts:8,icon:'🏃',diff:'低',type:'stairs',pw:'SPT6',img:'1.jpg',
+   checkin:'全員做運動起手式，對準體育館正門拍攝，並上傳至 Setlog。',
+   task:'樓梯接力挑戰：全組以接力形式跑旁邊長樓梯，一上一落計 2 次，共完成 20 次。完成後輸入所用時間，工作員核實。'},
+  {id:'youth',name:'長洲青年中心',pts:4,icon:'🏢',diff:'低',type:'leaflet',pw:'YTH5',img:'5.jpeg',
+   checkin:'全員指著青年中心名稱牌拍攝，並上傳至 Setlog。',
+   task:'進入青年中心，向職員索取一張宣傳單張，並向工作員展示。'},
+  {id:'temple',name:'天后宮',pts:5,icon:'⛩️',diff:'中',type:'challenge',pw:'TIN4',img:'2.jpeg',
+   checkin:'全員雙手合十做祈願姿勢，對準天后宮正門拍攝，並上傳至 Setlog。',
+   task:'挑戰1（由場外工作員處理）'},
+  {id:'cave',name:'張保仔洞',pts:5,icon:'🏴‍☠️',diff:'高',type:'quiz',bank:'cave',pw:'CAVE7',img:'7.jpg',
+   checkin:'全員手指向遠處做尋寶動作，對準張保仔洞入口拍攝，並上傳至 Setlog。',
+   task:'問答挑戰：從 15 題題庫隨機抽出 10 題，需答對 7 題或以上方可通關。'},
+  {id:'power',name:'長洲南變電站',pts:6,icon:'⚡',diff:'中',type:'challenge',pw:'PWR9',img:'3.jpeg',
+   checkin:'全員做觸電動作（全身僵硬、手掌張開），並上傳至 Setlog。',
+   task:'挑戰2（由場外工作員處理）'},
+  {id:'saiyuen',name:'長洲西園 (終點)',pts:0,icon:'🏕️',diff:'-',type:'staff',pw:'END0',img:'6.jpg',
+   checkin:'全員到達西園入口，與標誌拍攝大合照，並上傳至 Setlog。',
+   task:'終點報到：向工作員展示打卡紀錄，進行最終分數結算及確認完成所有任務。'}
+];
+
+var BANKS={
+  cinema:[
+    {q:'長洲戲院在哪一年落成？',opts:['A. 1921年','B. 1931年','C. 1941年'],a:1},
+    {q:'長洲戲院結業於哪一年？',opts:['A. 1987年','B. 1997年','C. 2007年'],a:1},
+    {q:'長洲戲院被評為哪一級歷史建築？',opts:['A. 一級','B. 二級','C. 三級'],a:2},
+    {q:'長洲戲院活化後的主要用途是什麼？',opts:['A. 酒店','B. 文化中心/博物館','C. 購物商場'],a:1},
+    {q:'戲院頂部的建築風格特色是什麼？',opts:['A. 哥德式尖頂','B. 金字瓦頂','C. 圓頂'],a:1},
+    {q:'早期戲院最常播放哪種類型的電影？',opts:['A. 粵語長片','B. 荷里活大片','C. 日本動畫'],a:0},
+    {q:'戲院內原本大約有多少個座位？',opts:['A. 約300個','B. 約600個','C. 約900個'],a:1},
+    {q:'除了放映電影，戲院以前還會用作什麼用途？',opts:['A. 街市','B. 粵劇表演','C. 醫院'],a:1},
+    {q:'戲院正門上方的標誌性設計是什麼？',opts:['A. 獅子雕像','B. 「長洲戲院」大字招牌','C. 鐘樓'],a:1},
+    {q:'長洲戲院的建築結構主要由什麼材料建成？',opts:['A. 玻璃幕牆','B. 磚石和木材','C. 全鋼筋混凝土'],a:1},
+    {q:'活化計劃中，戲院廣場會用作什麼？',opts:['A. 停車場','B. 戶外放映及活動空間','C. 游泳池'],a:1},
+    {q:'以下哪一項不是長洲戲院的歷史價值？',opts:['A. 反映早期離島居民娛樂','B. 獨特的早期戲院建築','C. 曾是港督府'],a:2},
+    {q:'戲院結業後，建築物經歷了什麼狀況？',opts:['A. 立即被拆卸','B. 荒廢多年，部分屋頂倒塌','C. 一直被政府完美保養'],a:1},
+    {q:'長洲戲院位於長洲的哪一區？',opts:['A. 新興街附近','B. 東灣附近','C. 碼頭正對面'],a:0},
+    {q:'活化後的長洲戲院包含了哪個體驗區？',opts:['A. 過山車體驗','B. 考古教育/模擬挖掘','C. 溜冰場'],a:1}
+  ],
+  cave:[
+    {q:'張保仔洞相傳是誰的藏寶地？',opts:['A. 海盜張保仔','B. 將軍林則徐','C. 英國總督'],a:0},
+    {q:'張保仔洞位於長洲的哪個方向？',opts:['A. 東南','B. 西南','C. 東北'],a:1},
+    {q:'進入張保仔洞通常需要帶備什麼裝備？',opts:['A. 泳衣','B. 電筒','C. 望遠鏡'],a:1},
+    {q:'張保仔活躍於哪個朝代？',opts:['A. 明朝','B. 清朝','C. 宋朝'],a:1},
+    {q:'張保仔洞內部的環境是怎樣的？',opts:['A. 寬敞明亮','B. 狹窄黑暗','C. 有地下河'],a:1},
+    {q:'據傳說，張保仔的船隊全盛時期有多少艘船？',opts:['A. 幾十艘','B. 數百甚至過千艘','C. 只有五艘'],a:1},
+    {q:'張保仔最終的結局是什麼？',opts:['A. 戰死沙場','B. 接受清廷招安成為海軍將領','C. 逃往海外'],a:1},
+    {q:'前往張保仔洞通常會經過哪個著名景點？',opts:['A. 鯆魚灣','B. 東灣海灘','C. 長洲市政大廈'],a:0},
+    {q:'張保仔洞的岩石主要屬於哪一類？',opts:['A. 石灰岩','B. 花崗岩','C. 沉積岩'],a:1},
+    {q:'洞穴的長度大約是多少？',opts:['A. 約 10 米','B. 約 80 米','C. 約 500 米'],a:0},
+    {q:'張保仔洞是天然形成還是人工開鑿的？',opts:['A. 天然海蝕洞','B. 人工開鑿坑道','C. 隕石坑'],a:0},
+    {q:'在張保仔洞附近，有哪個形狀奇特的石頭？',opts:['A. 望夫石','B. 五行石','C. 獅子石'],a:1},
+    {q:'張保仔的妻子是誰（同樣是著名海盜）？',opts:['A. 鄭一嫂','B. 花木蘭','C. 慈禧'],a:0},
+    {q:'張保仔洞目前有發現任何真正的寶藏嗎？',opts:['A. 發現了大量金幣','B. 發現了古董瓷器','C. 至今從未發現過寶藏'],a:2},
+    {q:'遊覽張保仔洞時，最需要注意什麼安全事項？',opts:['A. 防曬','B. 小心濕滑及碰頭','C. 防治雪崩'],a:1}
+  ]
+};
+
+var state={
+  team:'',
+  mainScore:0,
+  totalScore:0,
+  done:{},
+  confirmed:{},
+  unlocked:{},
+  success:{},
+  stairSubmitted:{},
+  stairVal:{},
+  stairBonus:{},
+  stairBonusResult:{},
+  sel:null,
+  qbank:[],
+  qIdx:0,
+  qCorrect:0,
+  qStationId:''
+};
+
+function $(id){return document.getElementById(id);}
+
+function save(){
+  localStorage.setItem('ccState',JSON.stringify(state));
+}
+
+function load(){
+  var d=localStorage.getItem('ccState');
+  if(d){
+    var s=JSON.parse(d);
+    Object.assign(state,s);
+  }
+  if(!state.confirmed) state.confirmed = {};
+  if(!state.unlocked) state.unlocked = {};
+  if(!state.success) state.success = {};
+  if(!state.stairSubmitted) state.stairSubmitted = {};
+  if(!state.stairVal) state.stairVal = {};
+  if(!state.stairBonus) state.stairBonus = {};
+  if(!state.stairBonusResult) state.stairBonusResult = {};
+}
+
+function updateBar(){
+  $('ms').textContent=state.mainScore;
+  $('ts').textContent=state.totalScore;
+  $('td').textContent=state.team||'';
+}
+
+function setTeam(){
+  var v=$('tn').value.trim();
+  if(!v){alert('請輸入隊伍名稱！');return;}
+  state.team=v;
+  save();
+  $('setup').style.display='none';
+  $('main').style.display='block';
+  updateBar();
+  renderStations();
+}
+
+function renderStations(){
+  var c=$('sgrid');
+  c.innerHTML='';
+  ST.forEach(function(s){
+    var done=state.done[s.id];
+    var sel=state.sel===s.id;
+    var div=document.createElement('div');
+    div.className='sc'+(sel?' sel':'')+(done?' done':'');
+    div.onclick=function(){openStation(s.id);};
+
+    var tags='';
+    if(sel)tags+='<span class="tag tsel">已選</span>';
+    if(done)tags+='<span class="tag tdone">✓完成</span>';
+
+    div.innerHTML='<div class="sn">'+s.icon+' '+s.name+tags+'</div>'
+      +'<div class="sp">+'+s.pts+' 分</div>'
+      +'<div class="sd">難度：'+s.diff+'</div>';
+    c.appendChild(div);
+  });
+}
+
+function openStation(id){
+  var s=ST.find(function(x){return x.id===id;});
+  if(!s)return;
+  state.sel=id;
+  save();
+  renderStations();
+
+  var ov=$('ov');
+  var mc=$('mc');
+  mc.innerHTML='';
+
+  var html='<div class="modal">'
+    +'<button class="cbtn" onclick="closeOv()">✕</button>'
+    +'<h2>'+s.icon+' '+s.name+'</h2>';
+
+  if(s.img) {
+    html+='<img src="'+s.img+'" style="width:100%; border-radius:8px; margin-bottom:12px; border:1px solid #0f3460;">';
+  } else {
+    html+='<div style="height:140px;background:#0f3460;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;">🖼️ 圖片預留位置</div>';
+  }
+
+  if(!state.confirmed[id]) {
+    html+='<div class="cbox" style="text-align:center;">'
+      +'<p style="margin-bottom:12px;font-size:0.9rem;">是否確認前往這個地點？</p>'
+      +'<button class="btn bp" style="width:100%;" onclick="confirmStation(\''+id+'\')">確認前往</button>'
+      +'</div>';
+  } else if (!state.unlocked[id] && !state.done[id]) {
+    html+='<div class="cbox"><b>📸 打卡任務：</b><br>'+s.checkin+'</div>'
+      +'<div class="cbox" style="margin-bottom:6px;"><b>🔑 輸入密碼解鎖主要任務：</b></div>'
+      +'<input class="pwin" id="pwi" type="text" placeholder="輸入密碼" maxlength="10">'
+      +'<div id="pwmsg"></div>'
+      +'<button class="btn bp" style="width:100%; margin-top:8px;" onclick="verifyPw(\'' +id+ '\')">確認密碼</button>';
+  } else {
+    if(!state.done[id]) {
+      html+='<div class="msg ms" style="margin-bottom:12px;">✅ 密碼正確！已解鎖主要任務。</div>'
+        +'<div class="cbox"><b>🎯 主要任務：</b><br>'+s.task.replace(/\n/g,'<br>')+'</div>';
+
+      if(s.type==='stairs') {
+        html+='<div class="esec"><b>⏱ 輸入完成時間（分鐘:秒）：</b><br>'
+          +'<input class="tin" id="stairIn" type="text" placeholder="例：3:45" maxlength="6">'
+          +'<button class="btn bg" onclick="submitStairTime(\'' +id+ '\')">提交時間</button></div>';
+      } else {
+        html+='<button class="btn bo" style="width:100%; margin-top:8px;" onclick="startTask(\'' +id+ '\')">開始挑戰</button>';
+      }
+    } else {
+      html+='<div class="cbox"><b>🎯 主要任務：</b><br>'+s.task.replace(/\n/g,'<br>')+'</div>';
+
+      if(state.success[id] === false) {
+        html+='<div class="msg me" style="display:block">❌ 挑戰失敗！無法獲得此站分數。</div>';
+      } else {
+        html+='<div class="msg ms" style="display:block">✅ 此站已完成！</div>';
+      }
+
+      if(s.type==='stairs'){
+        html+='<div class="esec"><b>⏱ 已記錄完成時間：</b> ' + (state.stairVal[id] || '-') + '<br><br>';
+        html+='<div style="color:#FF9800;font-weight:bold;margin-bottom:10px;">⭐ 隱藏任務：若能比輸入時間再快 30 秒完成，可獲額外 +2 分！</div>';
+
+        if(state.stairBonusResult && state.stairBonusResult[id]==='success'){
+          html+='<div class="msg ms" style="display:block">⭐ 已獲隱藏加分 (+2分)！</div>';
+        } else if(state.stairBonusResult && state.stairBonusResult[id]==='fail'){
+          html+='<div class="msg me" style="display:block">❌ 隱藏任務失敗，未能獲得額外分數。</div>';
+        } else {
+          html+='<div class="rowbtn">'
+            +'<button class="btn bo sm" onclick="claimStairBonusSuccess(\'' +id+ '\')">成功 (+2分)</button>'
+            +'<button class="btn sm" style="background:#F44336;color:#fff;" onclick="claimStairBonusFail(\'' +id+ '\')">任務失敗</button>'
+            +'</div>';
+        }
+        html+='</div>';
+      }
+    }
+  }
+
+  html+='</div>';
+  mc.innerHTML=html;
+  ov.classList.add('on');
+}
+
+function confirmStation(id) {
+  state.confirmed[id] = true;
+  save();
+  openStation(id);
+}
+
+function closeOv(){
+  $('ov').classList.remove('on');
+}
+
+function verifyPw(id){
+  var s=ST.find(function(x){return x.id===id;});
+  var inp=$('pwi').value.trim().toUpperCase();
+  var msg=$('pwmsg');
+
+  if(inp!==s.pw){
+    msg.className='msg me';
+    msg.textContent='❌ 密碼錯誤，請重試！';
+    return;
+  }
+
+  msg.className='msg ms';
+  msg.textContent='✅ 密碼正確！正在解鎖任務...';
+  state.unlocked[id] = true;
+  save();
+
+  setTimeout(function(){
+    openStation(id);
+  }, 600);
+}
+
+function startTask(id) {
+  var s=ST.find(function(x){return x.id===id;});
+  if(s.type==='quiz'){
+    startQuiz(id);
+  } else if(s.type==='challenge'){
+    startChallenge(id);
+  } else if(s.type==='leaflet' || s.type==='staff'){
+    completeStation(id,true);
+  }
+}
+
+function startChallenge(id){
+  var mc=$('mc');
+  var html='<div class="modal" style="text-align:center">'
+    +'<h2>⚖️ 挑戰結果</h2>'
+    +'<p style="margin:20px 0">請由工作員確認挑戰是否成功？</p>'
+    +'<button class="btn bg" style="margin-bottom:10px" onclick="completeStation(\''+id+'\',true)">✅ 挑戰成功 (獲得分數)</button>'
+    +'<button class="btn me" style="background:#F44336;color:white;margin-bottom:10px" onclick="completeStation(\''+id+'\',false)">❌ 挑戰失敗 (沒有分數)</button>'
+    +'<button class="btn" onclick="openStation(\''+id+'\')">返回</button>'
+    +'</div>';
+  mc.innerHTML=html;
+}
+
+function completeStation(id, success){
+  if(success === undefined) success = true;
+  var s=ST.find(function(x){return x.id===id;});
+  if(!state.done[id]){
+    state.done[id]=true;
+    state.success[id]=success;
+    if(success){
+      state.mainScore+=s.pts;
+      state.totalScore+=s.pts;
+    }
+    save();
+    updateBar();
+    renderStations();
+  }
+  openStation(id);
+}
+
+function submitStairTime(id) {
+  var v=$('stairIn').value.trim();
+  if(!v){alert('請輸入時間！');return;}
+  if(confirm('確認提交時間 '+v+'？工作員核實後將記錄。')) {
+    state.stairSubmitted[id] = true;
+    state.stairVal[id] = v;
+    completeStation(id, true);
+  }
+}
+
+function claimStairBonusSuccess(id) {
+  if(confirm('是否經工作員確認，成功完成隱藏任務並獲得 +2 分？')) {
+    state.stairBonus[id] = true;
+    state.stairBonusResult[id] = 'success';
+    state.totalScore += 2;
+    save();
+    updateBar();
+    openStation(id);
+  }
+}
+
+function claimStairBonusFail(id) {
+  if(confirm('是否確認隱藏任務挑戰失敗？此操作不會加分。')) {
+    state.stairBonus[id] = false;
+    state.stairBonusResult[id] = 'fail';
+    save();
+    updateBar();
+    openStation(id);
+  }
+}
+
+function startQuiz(id){
+  var s=ST.find(function(x){return x.id===id;});
+  var bank=BANKS[s.bank];
+  var shuffled=bank.slice().sort(function(){return Math.random()-0.5;});
+  state.qbank=shuffled.slice(0,10);
+  state.qIdx=0;
+  state.qCorrect=0;
+  state.qStationId=id;
+  save();
+  showQuestion();
+}
+
+function showQuestion(){
+  var mc=$('mc');
+  var q=state.qbank[state.qIdx];
+
+  var html='<div class="modal">'
+    +'<h2>📝 問答挑戰 ('+(state.qIdx+1)+'/10)</h2>'
+    +'<div class="rbar"><span class="rnum">'+state.qCorrect+'</span><small>答對</small></div>'
+    +'<div class="qq"><p>'+q.q+'</p>';
+
+  q.opts.forEach(function(opt,i){
+    html+='<button class="qo" onclick="answerQ('+i+')">'+opt+'</button>';
+  });
+
+  html+='</div></div>';
+  mc.innerHTML=html;
+}
+
+function answerQ(i){
+  var q=state.qbank[state.qIdx];
+  var isCorrect=(i===q.a);
+  if(isCorrect) state.qCorrect++;
+
+  var mc=$('mc');
+  var html='<div class="modal" style="text-align:center">'
+    +'<h2>'+(isCorrect?'✅ 答對了！':'❌ 答錯了！')+'</h2>'
+    +'<p style="margin:20px 0;font-size:1.1rem">目前答對：'+state.qCorrect+' 題</p>'
+    +'<button class="btn" onclick="nextQ()">下一題</button></div>';
+  mc.innerHTML=html;
+}
+
+function nextQ(){
+  state.qIdx++;
+  if(state.qIdx<10){
+    showQuestion();
+  } else {
+    var pass=(state.qCorrect>=7);
+    var mc=$('mc');
+    var html='<div class="modal" style="text-align:center">'
+      +'<h2>'+(pass?'🎉 挑戰成功！':'💔 挑戰失敗')+'</h2>'
+      +'<p style="margin:20px 0">共答對：'+state.qCorrect+' / 10 題</p>';
+
+    if(pass){
+      html+='<p style="color:#4CAF50;margin-bottom:20px">恭喜通過考驗！</p>'
+        +'<button class="btn bg" onclick="completeStation(\''+state.qStationId+'\',true)">領取分數</button>';
+    } else {
+      html+='<p style="color:#F44336;margin-bottom:20px">需答對7題才能過關，請重新挑戰。</p>'
+        +'<button class="btn bo" onclick="startQuiz(\''+state.qStationId+'\')">重新挑戰</button>'
+        +'<button class="btn" style="margin-top:10px" onclick="openStation(\''+state.qStationId+'\')">返回</button>';
+    }
+    html+='</div>';
+    mc.innerHTML=html;
+  }
+}
+
+function showResetConfirm(){
+  if(confirm('警告：這將會清除所有進度與分數，並且無法復原！確定要重設嗎？')){
+    resetGame();
+  }
+}
+
+function resetGame(){
+  localStorage.removeItem('ccState');
+  location.reload();
+}
+
+window.onload=function(){
+  load();
+  if(state.team){
+    $('setup').style.display='none';
+    $('main').style.display='block';
+    updateBar();
+    renderStations();
+  }
+};
+</script>
+</body>
+</html>
