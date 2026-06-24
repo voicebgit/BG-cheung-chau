@@ -3,126 +3,606 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行心間 2.0：長洲尋寶記</title>
+<title>平行心間 2.1：長洲尋寶記</title>
 <style>
-:root{--p:#0f3460;--s:#e94560;--bg:#1a1a2e;--g:#16213e;--t:#fff}
+:root{
+  --p:#183b67;
+  --p2:#0f2744;
+  --s:#ff6b6b;
+  --s2:#ff9f43;
+  --bg:#0d1522;
+  --g:#162235;
+  --g2:#1b2b42;
+  --card:#132033;
+  --line:rgba(255,255,255,.08);
+  --t:#f7fbff;
+  --muted:#b8c4d6;
+  --ok:#4CAF50;
+  --bad:#F44336;
+  --warn:#FF9800;
+  --shadow:0 10px 30px rgba(0,0,0,.28);
+  --radius:16px;
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-body{background:var(--bg);color:var(--t);line-height:1.5;-webkit-tap-highlight-color:transparent}
-header{background:var(--p);padding:15px;text-align:center;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.5)}
-h1{font-size:1.2rem;margin-bottom:8px}
-.bar{display:flex;justify-content:space-around;background:var(--g);padding:8px;border-radius:8px;font-size:.9rem}
-.bar div{text-align:center}
-.bar b{color:var(--s);font-size:1.1rem}
-.topActions{margin-top:10px;display:flex;gap:8px}
-.topActions .btn{padding:9px 12px;font-size:.9rem}
-.sec{padding:15px}
-h2{font-size:1.1rem;margin-bottom:12px;border-left:4px solid var(--s);padding-left:8px}
-.setup{background:var(--g);padding:20px;border-radius:12px;margin:20px 15px;text-align:center}
-input[type=text]{width:100%;padding:12px;border:none;border-radius:6px;margin:10px 0;font-size:1rem;background:#fff;color:#333}
-.btn{background:var(--s);color:#fff;border:none;padding:12px 20px;border-radius:6px;font-size:1rem;font-weight:bold;width:100%;cursor:pointer}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(circle at top right, rgba(255,107,107,.12), transparent 26%),
+    radial-gradient(circle at top left, rgba(24,59,103,.35), transparent 28%),
+    linear-gradient(180deg,#0a111b 0%, #0d1522 100%);
+  color:var(--t);
+  line-height:1.55;
+  -webkit-tap-highlight-color:transparent;
+}
+button,input{font:inherit}
+header{
+  background:linear-gradient(180deg, rgba(24,59,103,.96), rgba(15,39,68,.96));
+  padding:16px 15px 14px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.heroTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+h1{
+  font-size:1.22rem;
+  line-height:1.2;
+}
+.sub{
+  font-size:.78rem;
+  color:#d6dfeb;
+  opacity:.9;
+  margin-top:4px;
+}
+.iconBadge{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.1);
+  flex-shrink:0;
+}
+.bar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.stat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:10px 8px;
+  text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.stat .lab{
+  font-size:.76rem;
+  color:#c8d3e3;
+  margin-bottom:2px;
+}
+.stat b{
+  color:#fff;
+  font-size:1.06rem;
+}
+.topActions{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+.sec{padding:16px}
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+}
+.panel{
+  background:linear-gradient(180deg, rgba(22,34,53,.96), rgba(17,28,44,.96));
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.setup{
+  background:linear-gradient(180deg, rgba(22,34,53,.96), rgba(17,28,44,.96));
+  border:1px solid var(--line);
+  padding:22px;
+  border-radius:20px;
+  margin:22px 15px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.setup p{color:var(--muted)}
+.hd{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+h2{
+  font-size:1.08rem;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.h2dot{
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:var(--s);
+  box-shadow:0 0 0 6px rgba(255,107,107,.12);
+}
+.cardTitle{
+  font-size:.88rem;
+  color:var(--muted);
+}
+input[type=text]{
+  width:100%;
+  padding:13px 14px;
+  border:none;
+  border-radius:12px;
+  margin:10px 0;
+  font-size:1rem;
+  background:#fff;
+  color:#222;
+}
+.btn{
+  background:linear-gradient(135deg,var(--s),#ff7f7f);
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:12px;
+  font-size:1rem;
+  font-weight:700;
+  width:100%;
+  cursor:pointer;
+  transition:.18s ease;
+  box-shadow:0 8px 20px rgba(255,107,107,.22);
+}
+.btn:active{transform:scale(.98)}
 .btn.sm{padding:10px 12px;font-size:.9rem}
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.sc{background:var(--g);border:2px solid transparent;border-radius:10px;padding:12px;position:relative}
-.sc.sel{border-color:var(--s);background:#1a2035}
-.sc.done{opacity:.6;border-color:#4CAF50}
-.sn{font-weight:bold;font-size:1.05rem;margin-bottom:4px}
-.sp{color:var(--s);font-weight:bold}
-.sd{font-size:.8rem;color:#aaa}
-.tag{position:absolute;top:-8px;right:-8px;padding:2px 6px;border-radius:4px;font-size:.7rem;font-weight:bold}
-.tsel{background:var(--s);color:#fff}
-.tdone{background:#4CAF50;color:#fff}
-.ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:20;display:none;justify-content:center;align-items:center}
+.btn.ghost{
+  background:rgba(255,255,255,.08);
+  box-shadow:none;
+  border:1px solid rgba(255,255,255,.1);
+}
+.bg{background:linear-gradient(135deg,#4CAF50,#68c56d); box-shadow:0 8px 20px rgba(76,175,80,.2)}
+.bp{background:linear-gradient(135deg,#8e44ad,#b06dd2); box-shadow:0 8px 20px rgba(156,39,176,.2)}
+.bo{background:linear-gradient(135deg,#FF9800,#ffb341); box-shadow:0 8px 20px rgba(255,152,0,.2)}
+.bgy{background:linear-gradient(135deg,#5c708a,#778da6); box-shadow:none}
+.ruleWrap{padding:15px}
+.ruleList{
+  margin-left:18px;
+  color:var(--muted);
+  font-size:.93rem;
+}
+.ruleList li{margin-bottom:7px}
+.sgrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.sc{
+  background:linear-gradient(180deg, rgba(27,43,66,.95), rgba(19,32,51,.95));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:14px;
+  position:relative;
+  cursor:pointer;
+  transition:.18s ease;
+  min-height:124px;
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+}
+.sc:active{transform:scale(.985)}
+.sc.sel{
+  border-color:rgba(255,107,107,.55);
+  box-shadow:0 0 0 3px rgba(255,107,107,.12), 0 10px 22px rgba(0,0,0,.2);
+}
+.sc.done{
+  opacity:.88;
+  border-color:rgba(76,175,80,.55);
+}
+.stationTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.stationIcon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem;
+  flex-shrink:0;
+}
+.stationMeta{
+  flex:1;
+  min-width:0;
+}
+.sn{
+  font-weight:800;
+  font-size:1rem;
+  margin-bottom:4px;
+}
+.sp{
+  color:#ffd27a;
+  font-weight:800;
+  font-size:1rem;
+}
+.sd{
+  font-size:.82rem;
+  color:#9fb0c8;
+}
+.tag{
+  position:absolute;
+  top:10px;
+  right:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:800;
+}
+.tsel{background:rgba(255,107,107,.16);color:#ffb6b6;border:1px solid rgba(255,107,107,.35)}
+.tdone{background:rgba(76,175,80,.16);color:#9be39e;border:1px solid rgba(76,175,80,.35)}
+.eggsWrap{padding:15px}
+.eggsLead{
+  font-size:.92rem;
+  color:var(--muted);
+  margin-bottom:14px;
+}
+.routeCard{
+  background:linear-gradient(180deg, rgba(26,39,58,.94), rgba(18,29,45,.94));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.routeTitle{
+  font-weight:800;
+  margin-bottom:10px;
+  color:#ffd27a;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.routeTag{
+  font-size:.72rem;
+  padding:4px 8px;
+  border-radius:999px;
+  background:rgba(255,152,0,.15);
+  color:#ffc46c;
+  border:1px solid rgba(255,152,0,.28);
+}
+.eggGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.eggItem{
+  background:#0f1a29;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+.eggThumb{
+  aspect-ratio:4 / 3;
+  width:100%;
+  overflow:hidden;
+  background:linear-gradient(135deg,#1a2b44,#243a58);
+}
+.eggThumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.eggCap{
+  padding:8px 10px;
+  font-size:.78rem;
+  color:#bfcce0;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.ov{
+  position:fixed;
+  inset:0;
+  background:rgba(4,8,15,.8);
+  backdrop-filter:blur(8px);
+  z-index:50;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:14px;
+}
 .ov.on{display:flex}
-.modal{background:var(--g);width:90%;max-width:400px;border-radius:12px;padding:20px;position:relative;max-height:90vh;overflow-y:auto}
-.cbtn{position:absolute;top:10px;right:10px;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
-.cbox{background:#1a1a2e;padding:12px;border-radius:8px;margin-bottom:12px;font-size:.9rem}
-.pwin{text-align:center;letter-spacing:2px;font-weight:bold}
-.msg{padding:10px;border-radius:6px;text-align:center;margin-bottom:12px;font-weight:bold;display:none}
-.ms{background:rgba(76,175,80,.2);color:#4CAF50;display:block}
-.me{background:rgba(244,67,54,.2);color:#F44336;display:block}
-.qq{background:#1a1a2e;padding:15px;border-radius:8px;margin-bottom:15px}
+.modal{
+  background:linear-gradient(180deg, rgba(22,34,53,.98), rgba(16,26,40,.98));
+  width:100%;
+  max-width:430px;
+  border-radius:20px;
+  padding:20px;
+  position:relative;
+  max-height:90vh;
+  overflow-y:auto;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 16px 40px rgba(0,0,0,.34);
+}
+.cbtn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:1.5rem;
+  cursor:pointer;
+  width:38px;
+  height:38px;
+  border-radius:999px;
+}
+.cbtn:active{background:rgba(255,255,255,.07)}
+.heroImg{
+  width:100%;
+  aspect-ratio:16 / 10;
+  border-radius:14px;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,.08);
+  object-fit:cover;
+  background:#122236;
+}
+.cbox{
+  background:#0f1a29;
+  padding:13px;
+  border-radius:12px;
+  margin-bottom:12px;
+  font-size:.93rem;
+  border:1px solid rgba(255,255,255,.05);
+  color:#e5edf8;
+}
+.pwin{text-align:center;letter-spacing:2px;font-weight:800}
+.msg{
+  padding:11px 12px;
+  border-radius:12px;
+  text-align:center;
+  margin-bottom:12px;
+  font-weight:800;
+  display:none;
+}
+.ms{background:rgba(76,175,80,.16);color:#8fe194;display:block;border:1px solid rgba(76,175,80,.2)}
+.me{background:rgba(244,67,54,.16);color:#ff9d9d;display:block;border:1px solid rgba(244,67,54,.2)}
+.qq{
+  background:#0f1a29;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
+  border:1px solid rgba(255,255,255,.05);
+}
 .qq p{font-size:1.05rem;margin-bottom:15px}
-.qo{display:block;width:100%;background:var(--p);color:#fff;border:none;padding:12px;margin-bottom:8px;border-radius:6px;font-size:1rem;text-align:left}
-.rbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.rnum{font-size:1.5rem;font-weight:bold;color:#4CAF50}
-.bg{background:#4CAF50}.bp{background:#9C27B0}.bo{background:#FF9800}.bgy{background:#607D8B}
-.esec{background:#1a2035;border-radius:8px;padding:12px;margin-top:10px;font-size:.9rem;border-left:3px solid #FF9800}
-.tin{width:80px;text-align:center;padding:8px;margin:5px 0}
-.rbox{background:var(--g);padding:15px;border-radius:8px;font-size:.9rem}
+.qo{
+  display:block;
+  width:100%;
+  background:linear-gradient(180deg,#1c3453,#17304b);
+  color:#fff;
+  border:none;
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:10px;
+  font-size:1rem;
+  text-align:left;
+}
+.qo:active{transform:scale(.99)}
+.rbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+.rnum{font-size:1.5rem;font-weight:900;color:#7fd487}
+.esec{
+  background:#132338;
+  border-radius:12px;
+  padding:13px;
+  margin-top:10px;
+  font-size:.92rem;
+  border:1px solid rgba(255,152,0,.18);
+}
+.tin{
+  width:100%;
+  text-align:center;
+  padding:11px;
+  margin:8px 0 10px;
+  border-radius:10px;
+  border:none;
+}
 .rowbtn{display:flex;gap:8px;margin-top:10px}
 .rowbtn .btn{width:100%}
-@media (max-width:480px){
-  .sgrid{grid-template-columns:1fr}
-  .bar{font-size:.82rem}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:.76rem;
+  color:#ffd8ad;
+  background:rgba(255,159,67,.12);
+  border:1px solid rgba(255,159,67,.22);
+  padding:5px 8px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+.footerNote{
+  text-align:center;
+  color:#93a5be;
+  font-size:.78rem;
+  padding:0 16px 20px;
+}
+@media (min-width:760px){
+  .wrap{padding:0 8px}
+  .sgrid{grid-template-columns:repeat(3,1fr)}
+  .eggGrid{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:430px){
+  h1{font-size:1.08rem}
+  .stat .lab{font-size:.72rem}
+  .stat b{font-size:.98rem}
+  .sn{font-size:.94rem}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>平行心間 2.0：長洲尋寶記</h1>
-  <div class="bar">
-    <div>主線：<b id="ms">0</b> 分</div>
-    <div>總分：<b id="ts">0</b> 分</div>
-    <div>隊伍：<b id="td"></b></div>
-  </div>
-  <div class="topActions">
-    <button class="btn bgy" onclick="showResetConfirm()">重設遊戲</button>
+  <div class="wrap">
+    <div class="heroTitle">
+      <div>
+        <h1>平行心間 2.1：長洲尋寶記</h1>
+        <div class="sub">路線探索 × 打卡解鎖 × 團隊積分</div>
+      </div>
+      <div class="iconBadge">🧭</div>
+    </div>
+
+    <div class="bar">
+      <div class="stat">
+        <div class="lab">主線分數</div>
+        <b id="ms">0</b>
+      </div>
+      <div class="stat">
+        <div class="lab">總分</div>
+        <b id="ts">0</b>
+      </div>
+      <div class="stat">
+        <div class="lab">隊伍</div>
+        <b id="td">-</b>
+      </div>
+    </div>
+
+    <div class="topActions">
+      <button class="btn bgy sm" onclick="showResetConfirm()">重設遊戲</button>
+    </div>
   </div>
 </header>
 
-<div id="setup" class="setup">
-  <h2>歡迎來到長洲尋寶記</h2>
-  <p style="margin-bottom:15px;color:#ccc;font-size:0.95rem">請輸入您的隊伍名稱以開始遊戲</p>
-  <input type="text" id="tn" placeholder="隊伍名稱" maxlength="15">
+<div id="setup" class="setup wrap">
+  <div class="kicker">🎯 活動開始前，先建立隊伍</div>
+  <h2><span class="h2dot"></span>歡迎來到長洲尋寶記</h2>
+  <p style="margin-bottom:14px;font-size:0.95rem">請輸入隊伍名稱以開始遊戲</p>
+  <input type="text" id="tn" placeholder="輸入隊伍名稱" maxlength="15">
   <button class="btn" onclick="setTeam()">開始遊戲</button>
 </div>
 
 <div id="main" style="display:none">
-  <div class="sec rbox" style="margin:15px">
-    <h2>📋 遊戲規則</h2>
-    <ol style="margin-left:20px;color:#ccc;font-size:0.9rem">
-      <li><b>出發：</b>由長洲碼頭出發，自由選擇主站前往。</li>
-      <li><b>打卡：</b>到站後全員完成指定打卡動作並上傳 Setlog。</li>
-      <li><b>密碼：</b>向工作員展示「成功打卡」頁面。</li>
-      <li><b>解鎖：</b>輸入密碼後才正式顯示該站任務內容及計分。</li>
-      <li><b>限制：</b>每站只限 3 組完成正式任務（由場外記錄）。</li>
-      <li><b>換站：</b>每組只有 3 次換主站的機會。</li>
-      <li><b>終點：</b>所有隊伍終點站均需為 <b>長洲西園</b>。</li>
-    </ol>
-  </div>
-
-  <div class="sec">
-    <h2>🏠 主站選擇</h2>
-    <div class="sgrid" id="sgrid"></div>
-  </div>
-
-  <div class="sec rbox" style="margin:15px;border-left:4px solid #FF9800">
-    <h2>🥚 路上彩蛋</h2>
-    <p style="font-size:0.9rem;color:#ccc;margin-bottom:12px;">在前往主站途中，見到指定物件，隊員＋相應物件拍一段 Setlog。<br><br>每個有效彩蛋：<b style="color:#FF9800">+2 分</b><br><small>（最後由工作員統一計算並加入總分）</small></p>
-
-    <div style="margin-top:15px;">
-      <div style="background:#1a1a2e;border-radius:8px;padding:12px;margin-bottom:12px;">
-        <p style="font-weight:bold;margin-bottom:10px;color:#FF9800;">🏃 碼頭 → 長洲體育館 沿途彩蛋</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <img src="碼頭-長洲體育館1.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-長洲體育館2.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-長洲體育館3.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-長洲體育館4.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+  <div class="wrap">
+    <div class="sec">
+      <div class="panel ruleWrap">
+        <div class="hd">
+          <h2><span class="h2dot"></span>遊戲規則</h2>
+          <div class="cardTitle">出發前請先閱讀</div>
         </div>
+        <ol class="ruleListst">
+          ><b>出發：</b>由長洲碼頭出發，自由選擇主站前往。</l/li>
+          ><b>打卡：</b>到站後全員完成指定打卡動作並上傳 Setlog。</l/li>
+          ><b>密碼：</b>向工作員展示「成功打卡」頁面。</l/li>
+          ><b>解鎖：</b>輸入密碼後才正式顯示該站任務內容及計分。</l/li>
+          ><b>限制：</b>每站只限 3 組完成正式任務（由場外記錄）。</l/li>
+          ><b>換站：</b>每組只有 3 次換主站的機會。</l/li>
+          ><b>終點：</b>所有隊伍終點站均需為 <b>長洲西園</b>。</li>
+        </ol>
       </div>
+    </div>
 
-      <div style="background:#1a1a2e;border-radius:8px;padding:12px;">
-        <p style="font-weight:bold;margin-bottom:10px;color:#FF9800;">🏴‍☠️ 碼頭 → 張保仔洞 沿途彩蛋</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <img src="碼頭-張保仔洞1.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-張保仔洞2.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-張保仔洞3.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-張保仔洞4.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
-          <img src="碼頭-張保仔洞5.jpg" style="width:100%;border-radius:6px;border:1px solid #0f3460;" onerror="this.style.display='none'">
+    <div class="sec">
+      <div class="panel" style="padding:15px;">
+        <div class="hd">
+          <h2><span class="h2dot"></span>主站選擇</h2>
+          <div class="cardTitle">點擊地點查看任務</div>
+        </div>
+        <div class="sgrid" id="sgrid"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="panel eggsWrap">
+        <div class="hd">
+          <div>
+            <h2><span class="h2dot"></span>路上彩蛋</h2>
+            <div class="cardTitle">沿途發現指定物件，拍 Setlog 可加分</div>
+          </div>
+          <div class="routeTag">每個有效彩蛋 +2 分</div>
+        </div>
+
+        <p class="eggsLead">圖片已改為統一卡片比例展示，方便隊伍快速掃視，不會因原圖尺寸不一而令整個版面忽長忽短。</p>
+
+        <div class="routeCard">
+          <div class="routeTitle">
+            <span>🏃 碼頭 → 長洲體育館 沿途彩蛋</span>
+            <span class="routeTag">4 個目標</span>
+          </div>
+          <div class="eggGrid">
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-長洲體育館1.jpg" alt="碼頭至長洲體育館彩蛋圖 1" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 1</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-長洲體育館2.jpg" alt="碼頭至長洲體育館彩蛋圖 2" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 2</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-長洲體育館3.jpg" alt="碼頭至長洲體育館彩蛋圖 3" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 3</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-長洲體育館4.jpg" alt="碼頭至長洲體育館彩蛋圖 4" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 4</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="routeCard">
+          <div class="routeTitle">
+            <span>🏴‍☠️ 碼頭 → 張保仔洞 沿途彩蛋</span>
+            <span class="routeTag">5 個目標</span>
+          </div>
+          <div class="eggGrid">
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-張保仔洞1.jpg" alt="碼頭至張保仔洞彩蛋圖 1" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 1</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-張保仔洞2.jpg" alt="碼頭至張保仔洞彩蛋圖 2" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 2</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-張保仔洞3.jpg" alt="碼頭至張保仔洞彩蛋圖 3" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 3</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-張保仔洞4.jpg" alt="碼頭至張保仔洞彩蛋圖 4" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 4</div>
+            </div>
+            <div class="eggItem">
+              <div class="eggThumb"><img src="碼頭-張保仔洞5.jpg" alt="碼頭至張保仔洞彩蛋圖 5" onerror="this.closest('.eggItem').style.display='none'"></div>
+              <div class="eggCap">彩蛋目標 5</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="footerNote">提示：主站先確認前往，再完成打卡與密碼解鎖，流程會更清晰。</div>
   </div>
 </div>
 
@@ -212,11 +692,7 @@ var state={
 };
 
 function $(id){return document.getElementById(id);}
-
-function save(){
-  localStorage.setItem('ccState',JSON.stringify(state));
-}
-
+function save(){ localStorage.setItem('ccState',JSON.stringify(state)); }
 function load(){
   var d=localStorage.getItem('ccState');
   if(d){
@@ -235,7 +711,7 @@ function load(){
 function updateBar(){
   $('ms').textContent=state.mainScore;
   $('ts').textContent=state.totalScore;
-  $('td').textContent=state.team||'';
+  $('td').textContent=state.team||'-';
 }
 
 function setTeam(){
@@ -263,9 +739,16 @@ function renderStations(){
     if(sel)tags+='<span class="tag tsel">已選</span>';
     if(done)tags+='<span class="tag tdone">✓完成</span>';
 
-    div.innerHTML='<div class="sn">'+s.icon+' '+s.name+tags+'</div>'
+    div.innerHTML=
+      '<div class="stationTop">'
+        +'<div class="stationIcon">'+s.icon+'</div>'
+        +'<div class="stationMeta">'
+          +'<div class="sn">'+s.name+'</div>'
+          +'<div class="sd">難度：'+s.diff+'</div>'
+        +'</div>'
+      +'</div>'
       +'<div class="sp">+'+s.pts+' 分</div>'
-      +'<div class="sd">難度：'+s.diff+'</div>';
+      +tags;
     c.appendChild(div);
   });
 }
@@ -283,28 +766,29 @@ function openStation(id){
 
   var html='<div class="modal">'
     +'<button class="cbtn" onclick="closeOv()">✕</button>'
-    +'<h2>'+s.icon+' '+s.name+'</h2>';
+    +'<div class="kicker">📍 任務地點</div>'
+    +'<h2 style="margin-bottom:12px;">'+s.icon+' '+s.name+'</h2>';
 
   if(s.img) {
-    html+='<img src="'+s.img+'" style="width:100%; border-radius:8px; margin-bottom:12px; border:1px solid #0f3460;">';
+    html+='<img class="heroImg" src="'+s.img+'">';
   } else {
-    html+='<div style="height:140px;background:#0f3460;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;">🖼️ 圖片預留位置</div>';
+    html+='<div class="heroImg" style="display:flex;align-items:center;justify-content:center;color:#8da1bc;">🖼️ 圖片預留位置</div>';
   }
 
   if(!state.confirmed[id]) {
     html+='<div class="cbox" style="text-align:center;">'
-      +'<p style="margin-bottom:12px;font-size:0.9rem;">是否確認前往這個地點？</p>'
-      +'<button class="btn bp" style="width:100%;" onclick="confirmStation(\''+id+'\')">確認前往</button>'
+      +'<p style="margin-bottom:12px;font-size:0.95rem;">是否確認前往這個地點？</p>'
+      +'<button class="btn bp" onclick="confirmStation(\''+id+'\')">確認前往</button>'
       +'</div>';
   } else if (!state.unlocked[id] && !state.done[id]) {
     html+='<div class="cbox"><b>📸 打卡任務：</b><br>'+s.checkin+'</div>'
       +'<div class="cbox" style="margin-bottom:6px;"><b>🔑 輸入密碼解鎖主要任務：</b></div>'
       +'<input class="pwin" id="pwi" type="text" placeholder="輸入密碼" maxlength="10">'
       +'<div id="pwmsg"></div>'
-      +'<button class="btn bp" style="width:100%; margin-top:8px;" onclick="verifyPw(\'' +id+ '\')">確認密碼</button>';
+      +'<button class="btn bp" style="margin-top:8px;" onclick="verifyPw(\'' +id+ '\')">確認密碼</button>';
   } else {
     if(!state.done[id]) {
-      html+='<div class="msg ms" style="margin-bottom:12px;">✅ 密碼正確！已解鎖主要任務。</div>'
+      html+='<div class="msg ms">✅ 密碼正確！已解鎖主要任務。</div>'
         +'<div class="cbox"><b>🎯 主要任務：</b><br>'+s.task.replace(/\n/g,'<br>')+'</div>';
 
       if(s.type==='stairs') {
@@ -312,29 +796,29 @@ function openStation(id){
           +'<input class="tin" id="stairIn" type="text" placeholder="例：3:45" maxlength="6">'
           +'<button class="btn bg" onclick="submitStairTime(\'' +id+ '\')">提交時間</button></div>';
       } else {
-        html+='<button class="btn bo" style="width:100%; margin-top:8px;" onclick="startTask(\'' +id+ '\')">開始挑戰</button>';
+        html+='<button class="btn bo" style="margin-top:8px;" onclick="startTask(\'' +id+ '\')">開始挑戰</button>';
       }
     } else {
       html+='<div class="cbox"><b>🎯 主要任務：</b><br>'+s.task.replace(/\n/g,'<br>')+'</div>';
 
       if(state.success[id] === false) {
-        html+='<div class="msg me" style="display:block">❌ 挑戰失敗！無法獲得此站分數。</div>';
+        html+='<div class="msg me">❌ 挑戰失敗！無法獲得此站分數。</div>';
       } else {
-        html+='<div class="msg ms" style="display:block">✅ 此站已完成！</div>';
+        html+='<div class="msg ms">✅ 此站已完成！</div>';
       }
 
       if(s.type==='stairs'){
         html+='<div class="esec"><b>⏱ 已記錄完成時間：</b> ' + (state.stairVal[id] || '-') + '<br><br>';
-        html+='<div style="color:#FF9800;font-weight:bold;margin-bottom:10px;">⭐ 隱藏任務：若能比輸入時間再快 30 秒完成，可獲額外 +2 分！</div>';
+        html+='<div style="color:#ffc46c;font-weight:800;margin-bottom:10px;">⭐ 隱藏任務：若能比輸入時間再快 30 秒完成，可獲額外 +2 分！</div>';
 
         if(state.stairBonusResult && state.stairBonusResult[id]==='success'){
-          html+='<div class="msg ms" style="display:block">⭐ 已獲隱藏加分 (+2分)！</div>';
+          html+='<div class="msg ms">⭐ 已獲隱藏加分 (+2分)！</div>';
         } else if(state.stairBonusResult && state.stairBonusResult[id]==='fail'){
-          html+='<div class="msg me" style="display:block">❌ 隱藏任務失敗，未能獲得額外分數。</div>';
+          html+='<div class="msg me">❌ 隱藏任務失敗，未能獲得額外分數。</div>';
         } else {
           html+='<div class="rowbtn">'
             +'<button class="btn bo sm" onclick="claimStairBonusSuccess(\'' +id+ '\')">成功 (+2分)</button>'
-            +'<button class="btn sm" style="background:#F44336;color:#fff;" onclick="claimStairBonusFail(\'' +id+ '\')">任務失敗</button>'
+            +'<button class="btn sm" style="background:linear-gradient(135deg,#e74c3c,#ff6b6b);color:#fff;" onclick="claimStairBonusFail(\'' +id+ '\')">任務失敗</button>'
             +'</div>';
         }
         html+='</div>';
@@ -375,7 +859,7 @@ function verifyPw(id){
 
   setTimeout(function(){
     openStation(id);
-  }, 600);
+  }, 500);
 }
 
 function startTask(id) {
@@ -392,11 +876,12 @@ function startTask(id) {
 function startChallenge(id){
   var mc=$('mc');
   var html='<div class="modal" style="text-align:center">'
-    +'<h2>⚖️ 挑戰結果</h2>'
-    +'<p style="margin:20px 0">請由工作員確認挑戰是否成功？</p>'
-    +'<button class="btn bg" style="margin-bottom:10px" onclick="completeStation(\''+id+'\',true)">✅ 挑戰成功 (獲得分數)</button>'
-    +'<button class="btn me" style="background:#F44336;color:white;margin-bottom:10px" onclick="completeStation(\''+id+'\',false)">❌ 挑戰失敗 (沒有分數)</button>'
-    +'<button class="btn" onclick="openStation(\''+id+'\')">返回</button>'
+    +'<div class="kicker">⚖️ 工作員確認</div>'
+    +'<h2>挑戰結果</h2>'
+    +'<p style="margin:20px 0">請由工作員確認挑戰是否成功。</p>'
+    +'<button class="btn bg" style="margin-bottom:10px" onclick="completeStation(\''+id+'\',true)">✅ 挑戰成功（獲得分數）</button>'
+    +'<button class="btn" style="background:linear-gradient(135deg,#e74c3c,#ff6b6b);margin-bottom:10px" onclick="completeStation(\''+id+'\',false)">❌ 挑戰失敗（沒有分數）</button>'
+    +'<button class="btn ghost" onclick="openStation(\''+id+'\')">返回</button>'
     +'</div>';
   mc.innerHTML=html;
 }
@@ -466,7 +951,8 @@ function showQuestion(){
   var q=state.qbank[state.qIdx];
 
   var html='<div class="modal">'
-    +'<h2>📝 問答挑戰 ('+(state.qIdx+1)+'/10)</h2>'
+    +'<div class="kicker">📝 問答模式</div>'
+    +'<h2>問答挑戰 ('+(state.qIdx+1)+'/10)</h2>'
     +'<div class="rbar"><span class="rnum">'+state.qCorrect+'</span><small>答對</small></div>'
     +'<div class="qq"><p>'+q.q+'</p>';
 
@@ -503,12 +989,12 @@ function nextQ(){
       +'<p style="margin:20px 0">共答對：'+state.qCorrect+' / 10 題</p>';
 
     if(pass){
-      html+='<p style="color:#4CAF50;margin-bottom:20px">恭喜通過考驗！</p>'
+      html+='<p style="color:#8fe194;margin-bottom:20px">恭喜通過考驗！</p>'
         +'<button class="btn bg" onclick="completeStation(\''+state.qStationId+'\',true)">領取分數</button>';
     } else {
-      html+='<p style="color:#F44336;margin-bottom:20px">需答對7題才能過關，請重新挑戰。</p>'
+      html+='<p style="color:#ff9d9d;margin-bottom:20px">需答對 7 題才能過關，請重新挑戰。</p>'
         +'<button class="btn bo" onclick="startQuiz(\''+state.qStationId+'\')">重新挑戰</button>'
-        +'<button class="btn" style="margin-top:10px" onclick="openStation(\''+state.qStationId+'\')">返回</button>';
+        +'<button class="btn ghost" style="margin-top:10px" onclick="openStation(\''+state.qStationId+'\')">返回</button>';
     }
     html+='</div>';
     mc.innerHTML=html;
