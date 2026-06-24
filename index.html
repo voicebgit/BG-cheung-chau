@@ -180,13 +180,44 @@ input[type=text]{
 .bp{background:linear-gradient(135deg,#8e44ad,#b06dd2); box-shadow:0 8px 20px rgba(156,39,176,.2)}
 .bo{background:linear-gradient(135deg,#FF9800,#ffb341); box-shadow:0 8px 20px rgba(255,152,0,.2)}
 .bgy{background:linear-gradient(135deg,#5c708a,#778da6); box-shadow:none}
+
 .ruleWrap{padding:15px}
-.ruleList{
-  margin-left:18px;
-  color:var(--muted);
-  font-size:.93rem;
+.rulesCard{
+  display:grid;
+  gap:10px;
+  margin-top:6px;
 }
-.ruleList li{margin-bottom:7px}
+.ruleItem{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  padding:12px 12px;
+}
+.ruleNo{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.82rem;
+  font-weight:800;
+  color:#ffd27a;
+  background:rgba(255,159,67,.12);
+  border:1px solid rgba(255,159,67,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.ruleText{
+  color:var(--muted);
+  font-size:.95rem;
+  line-height:1.6;
+}
+.ruleText b{color:#fff}
+
 .sgrid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -259,6 +290,7 @@ input[type=text]{
 }
 .tsel{background:rgba(255,107,107,.16);color:#ffb6b6;border:1px solid rgba(255,107,107,.35)}
 .tdone{background:rgba(76,175,80,.16);color:#9be39e;border:1px solid rgba(76,175,80,.35)}
+
 .eggsWrap{padding:15px}
 .eggsLead{
   font-size:.92rem;
@@ -319,6 +351,7 @@ input[type=text]{
   color:#bfcce0;
   border-top:1px solid rgba(255,255,255,.05);
 }
+
 .ov{
   position:fixed;
   inset:0;
@@ -460,6 +493,9 @@ input[type=text]{
   .stat .lab{font-size:.72rem}
   .stat b{font-size:.98rem}
   .sn{font-size:.94rem}
+  .ruleItem{padding:11px 10px;gap:9px}
+  .ruleNo{width:26px;height:26px;font-size:.78rem}
+  .ruleText{font-size:.92rem;line-height:1.55}
 }
 </style>
 </head>
@@ -512,15 +548,37 @@ input[type=text]{
           <h2><span class="h2dot"></span>遊戲規則</h2>
           <div class="cardTitle">出發前請先閱讀</div>
         </div>
-        <ol class="ruleListst">
-          ><b>出發：</b>由長洲碼頭出發，自由選擇主站前往。</l/li>
-          ><b>打卡：</b>到站後全員完成指定打卡動作並上傳 Setlog。</l/li>
-          ><b>密碼：</b>向工作員展示「成功打卡」頁面。</l/li>
-          ><b>解鎖：</b>輸入密碼後才正式顯示該站任務內容及計分。</l/li>
-          ><b>限制：</b>每站只限 3 組完成正式任務（由場外記錄）。</l/li>
-          ><b>換站：</b>每組只有 3 次換主站的機會。</l/li>
-          ><b>終點：</b>所有隊伍終點站均需為 <b>長洲西園</b>。</li>
-        </ol>
+
+        <div class="rulesCard">
+          <div class="ruleItem">
+            <div class="ruleNo">1</div>
+            <div class="ruleText"><b>出發：</b>由長洲碼頭出發，自由選擇主站前往。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">2</div>
+            <div class="ruleText"><b>打卡：</b>到站後全員完成指定打卡動作並上傳 Setlog。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">3</div>
+            <div class="ruleText"><b>密碼：</b>向工作員展示「成功打卡」頁面。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">4</div>
+            <div class="ruleText"><b>解鎖：</b>輸入密碼後才正式顯示該站任務內容及計分。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">5</div>
+            <div class="ruleText"><b>限制：</b>每站只限 3 組完成正式任務（由場外記錄）。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">6</div>
+            <div class="ruleText"><b>換站：</b>每組只有 3 次換主站的機會。</div>
+          </div>
+          <div class="ruleItem">
+            <div class="ruleNo">7</div>
+            <div class="ruleText"><b>終點：</b>所有隊伍終點站均需為 <b>長洲西園</b>。</div>
+          </div>
+        </div>
       </div>
     </div>
 
