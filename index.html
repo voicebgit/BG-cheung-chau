@@ -585,7 +585,7 @@ input[type=text]{
           </div>
           <div class="ruleItem">
             <div class="ruleNo">7</div>
-            <div class="ruleText"><b>終點：</b>所有隊伍均需於下午4點前到達 <b>長洲西園</b>。</div>
+            <div class="ruleText"><b>終點：</b>所有隊伍均需於下午4點前到達 <b>長洲西園</b>，準時到達可獲 <b>+10 分</b>，遲到則 <b>+0 分</b>。</div>
           </div>
         </div>
       </div>
@@ -679,27 +679,27 @@ input[type=text]{
 
 <script>
 var ST=[
-  {id:'cinema',name:'長洲戲院',pts:6,icon:'🎬',diff:'中',type:'quiz',bank:'cinema',pw:'CIN8',img:'4.jpeg',
+  {id:'cinema',name:'長洲戲院',pts:4,icon:'🎬',diff:'中',type:'quiz',bank:'cinema',pw:'CIN8',img:'4.jpeg',
    checkin:'全員用雙手比出「相框」動作，對準戲院正面拍攝，並上傳至 Setlog。',
    task:'問答挑戰：從 15 題題庫隨機抽出 10 題，需答對 7 題或以上方可通關。'},
-  {id:'stadium',name:'長洲體育館',pts:8,icon:'🏃',diff:'低',type:'stairs',pw:'SPT6',img:'1.jpg',
+  {id:'stadium',name:'長洲體育館',pts:6,icon:'🏃',diff:'低',type:'stairs',pw:'SPT6',img:'1.jpg',
    checkin:'全員做運動起手式，對準體育館正門拍攝，並上傳至 Setlog。',
    task:'樓梯接力挑戰：全組以接力形式跑旁邊長樓梯，一上一落計 2 次，共完成 20 次。完成後輸入所用時間，工作員核實。'},
-  {id:'youth',name:'長洲青年中心',pts:4,icon:'🏢',diff:'低',type:'leaflet',pw:'YTH5',img:'5.jpeg',
+  {id:'youth',name:'長洲青年中心',pts:3,icon:'🏢',diff:'低',type:'leaflet',pw:'YTH5',img:'5.jpeg',
    checkin:'全員指著青年中心名稱牌拍攝，並上傳至 Setlog。',
    task:'進入青年中心，向職員索取一張宣傳單張，並向工作員展示。'},
-  {id:'temple',name:'天后宮',pts:5,icon:'⛩️',diff:'中',type:'challenge',pw:'TIN4',img:'2.jpeg',
+  {id:'temple',name:'天后宮',pts:4,icon:'⛩️',diff:'中',type:'challenge',pw:'TIN4',img:'2.jpeg',
    checkin:'全員雙手合十做祈願姿勢，對準天后宮正門拍攝，並上傳至 Setlog。',
    task:'挑戰1（由場外工作員處理）'},
-  {id:'cave',name:'張保仔洞',pts:5,icon:'🏴‍☠️',diff:'高',type:'quiz',bank:'cave',pw:'CAVE7',img:'7.jpg',
+  {id:'cave',name:'張保仔洞',pts:7,icon:'🏴‍☠️',diff:'高',type:'quiz',bank:'cave',pw:'CAVE7',img:'7.jpg',
    checkin:'全員手指向遠處做尋寶動作，對準張保仔洞入口拍攝，並上傳至 Setlog。',
    task:'問答挑戰：從 15 題題庫隨機抽出 10 題，需答對 7 題或以上方可通關。'},
-  {id:'power',name:'長洲南變電站',pts:6,icon:'⚡',diff:'中',type:'challenge',pw:'PWR9',img:'3.jpeg',
+  {id:'power',name:'長洲南變電站',pts:5,icon:'⚡',diff:'中',type:'challenge',pw:'PWR9',img:'3.jpeg',
    checkin:'全員做觸電動作（全身僵硬、手掌張開），並上傳至 Setlog。',
    task:'挑戰2（由場外工作員處理）'},
-  {id:'saiyuen',name:'長洲西園 (終點)',pts:0,icon:'🏕️',diff:'-',type:'staff',pw:'END0',img:'6.jpg',
+  {id:'saiyuen',name:'長洲西園 (終點)',pts:10,icon:'🏕️',diff:'-',type:'deadline',pw:'END0',img:'6.jpg',
    checkin:'全員到達西園入口，與標誌拍攝大合照，並上傳至 Setlog。',
-   task:'終點報到：向工作員展示打卡紀錄，進行最終分數結算及確認完成所有任務。'}
+   task:'終點報到：下午 4:00 前到達可獲 +10 分，4:00 後到達則 +0 分。請向工作員展示打卡紀錄作最後確認。'}
 ];
 
 var BANKS={
@@ -751,6 +751,8 @@ var state={
   stairVal:{},
   stairBonus:{},
   stairBonusResult:{},
+  deadlineTime:{},
+  deadlineBonus:{},
   sel:null,
   qbank:[],
   qIdx:0,
@@ -773,6 +775,8 @@ function load(){
   if(!state.stairVal) state.stairVal = {};
   if(!state.stairBonus) state.stairBonus = {};
   if(!state.stairBonusResult) state.stairBonusResult = {};
+  if(!state.deadlineTime) state.deadlineTime = {};
+  if(!state.deadlineBonus) state.deadlineBonus = {};
 }
 
 function updateBar(){
@@ -807,6 +811,8 @@ function renderStations(){
     if(sel)tags+='<span class="tag tsel">已選</span>';
     if(done)tags+='<span class="tag tdone">✓完成</span>';
 
+    var ptsLabel = (s.id==='saiyuen') ? '準時 +10 分' : '+'+s.pts+' 分';
+
     div.innerHTML=
       '<div class="stationTop">'
         +'<div class="stationIcon">'+s.icon+'</div>'
@@ -815,7 +821,7 @@ function renderStations(){
           +'<div class="sd">難度：'+s.diff+'</div>'
         +'</div>'
       +'</div>'
-      +'<div class="sp">+'+s.pts+' 分</div>'
+      +'<div class="sp">'+ptsLabel+'</div>'
       +tags;
     c.appendChild(div);
   });
@@ -863,6 +869,8 @@ function openStation(id){
         html+='<div class="esec"><b>⏱ 輸入完成時間（分鐘:秒）：</b><br>'
           +'<input class="tin" id="stairIn" type="text" placeholder="例：3:45" maxlength="6">'
           +'<button class="btn bg" onclick="submitStairTime(\'' +id+ '\')">提交時間</button></div>';
+      } else if(s.type==='deadline') {
+        html+='<button class="btn bo" style="margin-top:8px;" onclick="startTask(\'' +id+ '\')">終點報到並判定時間</button>';
       } else {
         html+='<button class="btn bo" style="margin-top:8px;" onclick="startTask(\'' +id+ '\')">開始挑戰</button>';
       }
@@ -873,6 +881,17 @@ function openStation(id){
         html+='<div class="msg me">❌ 挑戰失敗！無法獲得此站分數。</div>';
       } else {
         html+='<div class="msg ms">✅ 此站已完成！</div>';
+      }
+
+      if(s.type==='deadline'){
+        html+='<div class="esec">';
+        html+='<div><b>🕓 報到時間：</b> ' + (state.deadlineTime[id] || '-') + '</div><br>';
+        if((state.deadlineBonus[id] || 0) > 0){
+          html+='<div class="msg ms">✅ 已於下午 4:00 前到達，獲得 +10 分！</div>';
+        } else {
+          html+='<div class="msg me">⏰ 已於下午 4:00 後到達，未能獲得時間獎勵。</div>';
+        }
+        html+='</div>';
       }
 
       if(s.type==='stairs'){
@@ -936,6 +955,8 @@ function startTask(id) {
     startQuiz(id);
   } else if(s.type==='challenge'){
     startChallenge(id);
+  } else if(s.type==='deadline'){
+    completeDeadlineStation(id);
   } else if(s.type==='leaflet' || s.type==='staff'){
     completeStation(id,true);
   }
@@ -969,6 +990,39 @@ function completeStation(id, success){
     renderStations();
   }
   openStation(id);
+}
+
+function completeDeadlineStation(id){
+  var now = new Date();
+  var hh = now.getHours();
+  var mm = now.getMinutes();
+  var total = hh * 60 + mm;
+  var cutoff = 16 * 60;
+  var timeStr = String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0');
+  var onTime = total <= cutoff;
+  var s = ST.find(function(x){return x.id===id;});
+
+  if(state.done[id]) {
+    openStation(id);
+    return;
+  }
+
+  if(confirm('確認以目前時間 ' + timeStr + ' 作終點報到？')) {
+    state.done[id] = true;
+    state.success[id] = true;
+    state.deadlineTime[id] = timeStr;
+    state.deadlineBonus[id] = onTime ? s.pts : 0;
+
+    if(onTime){
+      state.mainScore += s.pts;
+      state.totalScore += s.pts;
+    }
+
+    save();
+    updateBar();
+    renderStations();
+    openStation(id);
+  }
 }
 
 function submitStairTime(id) {
